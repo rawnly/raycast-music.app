@@ -21,11 +21,11 @@ export default async function Page() {
   return (
     <>
       <section
-        className="w-screen h-[110vh] bg-[url(/bg-light.png)] min-h-screen dark:bg-[url(/bg-dark.png)]"
+        className="w-screen h-screen bg-[url(/bg-light.png)] min-h-screen dark:bg-[url(/bg-dark.png)]"
         style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover" }}
       >
-        <div className="absolute inset-x-0 bg-gradient-to-b to-white dark:to-black from-[transparent] -bottom-[10vh] h-[10vh]"></div>
-        <div className="grid absolute inset-0 grid-cols-2 gap-x-8 p-12 m-8 text-black bg-white rounded-lg shadow dark:text-white dark:bg-black">
+        {/* <div className="absolute inset-x-0 bg-gradient-to-b to-white dark:to-black from-[transparent] -bottom-[10vh] h-[10vh]"></div> */}
+        <div className="grid absolute inset-0 grid-cols-2 gap-x-8 p-12 m-8 text-black bg-white rounded-xl shadow dark:text-white dark:bg-black">
           <div className="flex col-span-2 justify-center items-center md:col-span-1 md:justify-end">
             <Hero />
           </div>
@@ -33,9 +33,6 @@ export default async function Page() {
             <RaycastMenu extension={extension} />
           </div>
         </div>
-      </section>
-      <section className="flex justify-center items-center w-screen min-h-screen dark:text-white dark:bg-black">
-        <h1>hello</h1>
       </section>
     </>
   );

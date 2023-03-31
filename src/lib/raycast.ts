@@ -20,6 +20,21 @@ const commandSchema = z.object({
 
 export type Command = z.infer<typeof commandSchema>;
 
+const contributorSchema = z.object({
+  name: z.string(),
+  handle: z.string(),
+  bio: z.string(),
+  twitter_handle: z.string().optional(),
+  initials: z.string(),
+  location: z.string(),
+  github_handle: z.string(),
+  website: z.string().optional(),
+  username: z.string(),
+  avatar: z.string(),
+});
+
+export type Contributor = z.infer<typeof contributorSchema>;
+
 const extensionSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -29,6 +44,9 @@ const extensionSchema = z.object({
   description: z.string(),
   source_url: z.string(),
   icons: iconsSchema,
+  contributors: z.array(contributorSchema).default([]),
+  owner: contributorSchema,
+  author: contributorSchema,
   commands: z.array(commandSchema),
   changelog: z.object({
     versions: z.array(
@@ -48,6 +66,7 @@ export const getExtension = async (author: string, extensionName: string) => {
   const response = await fetch(url);
 
   if (response.status !== 200) {
+    console.log(response);
     return null;
   }
 
@@ -55,6 +74,8 @@ export const getExtension = async (author: string, extensionName: string) => {
   const ext = extensionSchema.safeParse(data);
 
   if (ext.success) return ext.data;
+  console.error(ext.error);
+
   return null;
 };
 

@@ -32,7 +32,7 @@ export default function Hero() {
         initial="hidden"
         className="text-5xl font-bold max-w-[500px]"
       >
-        The <i>only</i> Music extension you need
+        The <i className="font-serif">only</i> Music extension you need
       </motion.h1>
       <ul className="mt-6 text-xl font-medium">
         <motion.li

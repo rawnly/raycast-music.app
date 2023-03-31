@@ -1,14 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useId } from "react";
 import { useTheme } from "next-themes";
 import { Command } from "cmdk";
+import { ArrowLeft } from "lucide-react";
+import { atom, useAtom } from "jotai";
 
 type Item =
   | {
     icon?: JSX.Element;
     title: string;
-    command?: boolean;
+    kind?: string;
+    value?: string;
     onSelect?(): void;
   }
   | {
@@ -18,38 +21,85 @@ type Item =
 
 interface Props {
   items: Item[];
+  onBack?(): void;
+  nested?: boolean;
 }
+
+export const searchAtom = atom<string>("");
 
 export default function RaycastCMDK(props: Props) {
   const { resolvedTheme: theme } = useTheme();
-  const [value, setValue] = React.useState("linear");
+  const [value, setValue] = React.useState("install");
+  const [search, setSearch] = useAtom(searchAtom);
+
+  const id = useId();
+
   const inputRef = React.useRef<HTMLInputElement | null>(null);
-  const listRef = React.useRef(null);
+
+  const onKeyDown = React.useCallback(
+    function onKeyDown(e: any) {
+      if (e.key === "Escape") {
+        props.onBack?.();
+        return;
+      }
+
+      if (e.key === "Backspace" && e.target.value === "") {
+        props.onBack?.();
+        return;
+      }
+    },
+    [props]
+  );
 
   React.useEffect(() => {
     inputRef?.current?.focus();
   }, []);
 
+  React.useEffect(() => {
+    if (!inputRef.current) return;
+
+    const ref = inputRef.current;
+
+    ref.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      ref.removeEventListener("keydown", onKeyDown);
+    };
+  }, [inputRef, onKeyDown]);
+
   return (
     <div className="raycast">
       <Command value={value} onValueChange={(v) => setValue(v)}>
         <div cmdk-raycast-top-shine="" />
-        <Command.Input
-          ref={inputRef}
-          autoFocus
-          placeholder="Search for apps and commands..."
-        />
+        <div className="flex gap-x-3 justify-start items-center px-4">
+          {props.nested && (
+            <button
+              onClick={props.onBack}
+              className="py-1 px-1.5 bg-gray-200 rounded ddark:bg-slate-800/50"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
+          )}
+          <Command.Input
+            ref={inputRef}
+            onValueChange={setSearch}
+            value={search}
+            autoFocus
+            placeholder="Search for commands..."
+            className="py-2"
+          />
+        </div>
         <hr cmdk-raycast-loader="" />
-        <Command.List ref={listRef}>
+        <Command.List>
           <Command.Empty>No results found.</Command.Empty>
-          {props.items.map((item) =>
+          {props.items.map((item, idx) =>
             "label" in item ? (
               <Command.Group key={item.label} heading={item.label}>
                 {item.items.map((item) => (
                   <Item
-                    isCommand={item.command}
+                    kind={item.kind}
                     key={item.title}
-                    value={item.title}
+                    value={item.value ?? item.title}
                     onSelect={item.onSelect}
                   >
                     {item.icon}
@@ -58,11 +108,7 @@ export default function RaycastCMDK(props: Props) {
                 ))}
               </Command.Group>
             ) : (
-              <Item
-                isCommand={item.command}
-                key={item.title}
-                value={item.title}
-              >
+              <Item kind={item.kind} key={id} value={item.value ?? item.title}>
                 {item.icon}
                 {item.title}
               </Item>
@@ -74,7 +120,7 @@ export default function RaycastCMDK(props: Props) {
           {theme === "dark" ? <RaycastDarkIcon /> : <RaycastLightIcon />}
 
           <button cmdk-raycast-open-trigger="">
-            Open Application
+            Open Command
             <kbd>↵</kbd>
           </button>
 
@@ -96,16 +142,18 @@ function Item({
   value,
   onSelect,
   isCommand = false,
+  kind = "Command",
 }: {
   children: React.ReactNode;
   onSelect?(value: string): void;
   value: string;
   isCommand?: boolean;
+  kind?: string;
 }) {
   return (
     <Command.Item value={value} onSelect={onSelect}>
       {children}
-      <span cmdk-raycast-meta="">{isCommand ? "Command" : "Application"}</span>
+      <span cmdk-raycast-meta="">{kind ?? "Command"}</span>
     </Command.Item>
   );
 }
