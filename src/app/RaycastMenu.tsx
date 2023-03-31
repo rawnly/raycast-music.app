@@ -60,7 +60,10 @@ export default function RaycastMenu({ extension }: Props) {
   }, [setPage, setSearch, lastSearch]);
 
   return (
-    <div className="space-y-4 max-w-[650px]">
+    <div className="space-y-4 w-full max-w-[640px]">
+      {/* <div className="text-center lg:hidden"> */}
+      {/*   <MenuFooter extension={extension} /> */}
+      {/* </div> */}
       <motion.div
         initial={{ opacity: 0, translateY: -15 }}
         animate={{ opacity: 1, translateY: 0 }}

@@ -14,9 +14,11 @@ export const metadata = {
     },
   ],
   twitter: {
-    creator: "@fedevitaledev",
+    site: "@fedevitaledev",
+    card: "summary_large_image",
   },
   openGraph: {
+    type: "website",
     images: [
       {
         alt: "Raycast Music",

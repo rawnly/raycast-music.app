@@ -15,16 +15,18 @@ export default async function Page() {
   return (
     <>
       <section
-        className="w-screen h-screen bg-[url(/bg-light.png)] min-h-screen dark:bg-[url(/bg-dark.png)]"
+        className="w-screen h-screen bg-black lg:bg-[url(/bg-light.png)] min-h-screen dark:lg:bg-[url(/bg-dark.png)]"
         style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover" }}
       >
-        {/* <div className="absolute inset-x-0 bg-gradient-to-b to-white dark:to-black from-[transparent] -bottom-[10vh] h-[10vh]"></div> */}
-        <div className="grid absolute inset-0 grid-cols-2 gap-x-8 p-12 m-8 text-black bg-white rounded-xl shadow dark:text-white dark:bg-black">
-          <div className="flex col-span-2 justify-center items-center md:col-span-1 md:justify-end">
+        <div className="grid absolute inset-0 grid-cols-2 gap-x-8 p-12 text-black bg-white rounded-xl shadow lg:m-8 dark:text-white dark:bg-black">
+          <div className="flex flex-col col-span-2 gap-8 justify-center items-center lg:col-span-1 lg:items-end">
             <Hero />
+            <div className="flex justify-center items-center w-full lg:hidden">
+              <RaycastMenu extension={extension} />
+            </div>
           </div>
-          <div className="hidden relative col-span-1 justify-center items-center pl-8 md:flex">
-            <div className="my-auto space-y-4 w-full">
+          <div className="hidden relative col-span-1 justify-center items-center pl-8 lg:flex">
+            <div className="my-auto w-full">
               <RaycastMenu extension={extension} />
             </div>
           </div>

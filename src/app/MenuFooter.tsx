@@ -17,7 +17,7 @@ export default function MenuFooter({ extension }: Props) {
       transition={{ delay: 0.2 }}
       className="text-sm text-gray-500 dark:text-[#3d3d3d]"
     >
-      ~
+      Join{" "}
       <MagicNumber
         accent={"#E7515D"}
         value={
@@ -26,7 +26,7 @@ export default function MenuFooter({ extension }: Props) {
           ) ?? extension.download_count
         }
       />
-      {getNumberFormat(extension.download_count)} users are using{" "}
+      {getNumberFormat(extension.download_count)} users using{" "}
       <i className="font-serif font-medium">Raycast Music</i>
     </motion.div>
   );

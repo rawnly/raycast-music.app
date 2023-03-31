@@ -44,7 +44,7 @@ const ListItem = ({
     animate="visible"
     className="flex flex-row-reverse gap-2 justify-start items-center"
   >
-    <Check className="w-4 h-4" />
+    <Check className="hidden w-4 h-4 lg:block" />
     {children}
   </motion.li>
 );
@@ -57,7 +57,7 @@ const features = [
 
 export default function Hero() {
   return (
-    <div className={clsx("text-center md:text-right", inter.className)}>
+    <div className={clsx("text-center lg:text-right", inter.className)}>
       <motion.h1
         variants={variants}
         animate="visible"
@@ -70,7 +70,7 @@ export default function Hero() {
         </i>{" "}
         Music extension you need
       </motion.h1>
-      <ul className="mt-6 text-xl font-medium">
+      <ul className="hidden mt-6 text-xl font-medium lg:block">
         {features.map((f, idx) => (
           <ListItem key={f} delay={0.1 * idx}>
             {f}
