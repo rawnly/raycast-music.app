@@ -61,10 +61,11 @@ export default function Hero() {
         </motion.li>
       </ul>
       <Link
+        prefetch={false}
         animate="visible"
         initial="hidden"
         variants={variants}
-        href={"raycast://extensions/fedevitaledev/music"}
+        href={"/install"}
       >
         <Button className="mt-4">Add to Raycast</Button>
       </Link>
