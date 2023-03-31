@@ -15,6 +15,14 @@ export const metadata = {
   twitter: {
     creator: "@fedevitaledev",
   },
+  openGraph: {
+    images: [
+      {
+        alt: "Raycast Music",
+        url: "/og-image.png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
