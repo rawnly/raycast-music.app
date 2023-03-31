@@ -1,5 +1,6 @@
 "use client";
 
+import Balancer from "react-wrap-balancer";
 import L from "next/link";
 import Button from "./button";
 import { motion, Transition } from "framer-motion";
@@ -57,20 +58,27 @@ const features = [
 
 export default function Hero() {
   return (
-    <div className={clsx("text-center lg:text-right", inter.className)}>
-      <motion.h1
-        variants={variants}
-        animate="visible"
-        initial="hidden"
-        className="text-5xl font-bold max-w-[500px]"
-      >
-        The{" "}
-        <i className="font-serif" style={{ fontWeight: 400 }}>
-          only
-        </i>{" "}
-        Music extension you need
-      </motion.h1>
-      <ul className="hidden mt-6 text-xl font-medium lg:block">
+    <div
+      className={clsx(
+        "text-center flex flex-col gap-y-6 lg:text-right",
+        inter.className
+      )}
+    >
+      <Balancer>
+        <motion.h1
+          variants={variants}
+          animate="visible"
+          initial="hidden"
+          className="text-3xl font-bold sm:text-5xl max-w-[500px]"
+        >
+          The{" "}
+          <i className="font-serif" style={{ fontWeight: 400 }}>
+            only
+          </i>{" "}
+          Music extension you need
+        </motion.h1>
+      </Balancer>
+      <ul className="hidden text-xl font-medium lg:block">
         {features.map((f, idx) => (
           <ListItem key={f} delay={0.1 * idx}>
             {f}
@@ -84,7 +92,7 @@ export default function Hero() {
         variants={variants}
         href={"/install"}
       >
-        <Button className="mt-4">Add to Raycast</Button>
+        <Button>Add to Raycast</Button>
       </Link>
     </div>
   );
