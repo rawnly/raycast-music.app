@@ -3,6 +3,13 @@
 import L from "next/link";
 import Button from "./button";
 import { motion, Transition } from "framer-motion";
+import { Inter } from "next/font/google";
+import clsx from "clsx";
+import { Check } from "lucide-react";
+
+const inter = Inter({
+  subsets: ["latin"],
+});
 
 const variants = {
   visible: {
@@ -16,16 +23,41 @@ const variants = {
 };
 
 const transition: Transition = {
-  duration: 0.2,
+  duration: 0.25,
   bounce: 0.1,
-  type: "spring",
+  type: "tween",
 };
 
 const Link = motion(L);
 
+const ListItem = ({
+  children,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+}) => (
+  <motion.li
+    variants={variants}
+    transition={{ ...transition, delay }}
+    initial="hidden"
+    animate="visible"
+    className="flex flex-row-reverse gap-2 justify-start items-center"
+  >
+    <Check className="w-4 h-4" />
+    {children}
+  </motion.li>
+);
+
+const features = [
+  "It works offline",
+  "View and manage your playlists",
+  "Easy Music playback controls",
+];
+
 export default function Hero() {
   return (
-    <div className="text-center md:text-right">
+    <div className={clsx("text-center md:text-right", inter.className)}>
       <motion.h1
         variants={variants}
         animate="visible"
@@ -35,30 +67,11 @@ export default function Hero() {
         The <i className="font-serif">only</i> Music extension you need
       </motion.h1>
       <ul className="mt-6 text-xl font-medium">
-        <motion.li
-          variants={variants}
-          transition={transition}
-          initial="hidden"
-          animate="visible"
-        >
-          It works offline
-        </motion.li>
-        <motion.li
-          variants={variants}
-          transition={transition}
-          initial="hidden"
-          animate="visible"
-        >
-          View and manage your playlists
-        </motion.li>
-        <motion.li
-          variants={variants}
-          transition={transition}
-          initial="hidden"
-          animate="visible"
-        >
-          Easy Music playback controls
-        </motion.li>
+        {features.map((f, idx) => (
+          <ListItem key={f} delay={0.1 * idx}>
+            {f}
+          </ListItem>
+        ))}
       </ul>
       <Link
         prefetch={false}

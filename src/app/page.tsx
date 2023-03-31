@@ -2,14 +2,8 @@ import { getExtension } from "@/lib/raycast";
 import RaycastMenu from "./RaycastMenu";
 import Hero from "@/components/Hero";
 import { motion } from "framer-motion";
-
-const formatNumber = (num: number) => {
-  if (num < 1e3) return num.toString();
-  if (num < 1e6) return (num / 1e3).toFixed(1) + "K";
-  if (num < 1e9) return (num / 1e6).toFixed(1) + "M";
-
-  return (num / 1e9).toFixed(1) + "B";
-};
+import MagicNumber from "@/components/MagicNumber";
+import MenuFooter from "./MenuFooter";
 
 export default async function Page() {
   const extension = await getExtension("fedevitaledev", "music");
@@ -29,8 +23,10 @@ export default async function Page() {
           <div className="flex col-span-2 justify-center items-center md:col-span-1 md:justify-end">
             <Hero />
           </div>
-          <div className="hidden col-span-1 justify-start items-center pl-8 md:flex">
-            <RaycastMenu extension={extension} />
+          <div className="hidden relative col-span-1 justify-center items-center pl-8 md:flex">
+            <div className="my-auto space-y-4 w-full">
+              <RaycastMenu extension={extension} />
+            </div>
           </div>
         </div>
       </section>
