@@ -13,6 +13,7 @@ type Item =
     kind?: string;
     value?: string;
     onSelect?(): void;
+    disabled?: boolean;
   }
   | {
     label: string;
@@ -75,7 +76,7 @@ export default function RaycastCMDK(props: Props) {
           {props.nested && (
             <button
               onClick={props.onBack}
-              className="py-1 px-1.5 bg-gray-200 rounded ddark:bg-slate-800/50"
+              className="py-1 px-1.5 rounded text-[--gray12] bg-[--gray5]"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
@@ -95,10 +96,10 @@ export default function RaycastCMDK(props: Props) {
           {props.items.map((item, idx) =>
             "label" in item ? (
               <Command.Group key={item.label} heading={item.label}>
-                {item.items.map((item) => (
+                {item.items.map((item, idx) => (
                   <Item
+                    key={idx}
                     kind={item.kind}
-                    key={item.title}
                     value={item.value ?? item.title}
                     onSelect={item.onSelect}
                   >
@@ -141,17 +142,22 @@ function Item({
   children,
   value,
   onSelect,
-  isCommand = false,
+  disabled = false,
   kind = "Command",
 }: {
   children: React.ReactNode;
   onSelect?(value: string): void;
   value: string;
-  isCommand?: boolean;
+  disabled?: boolean;
   kind?: string;
 }) {
   return (
-    <Command.Item value={value} onSelect={onSelect}>
+    <Command.Item
+      className="disabled:opacity-50"
+      disabled={disabled}
+      value={value}
+      onSelect={onSelect}
+    >
       {children}
       <span cmdk-raycast-meta="">{kind ?? "Command"}</span>
     </Command.Item>
