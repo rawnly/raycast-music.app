@@ -110,6 +110,14 @@ export default function RaycastMenu({ extension }: Props) {
                 {
                   kind: "Author",
                   title: extension.author.name,
+                  onSelect: () =>
+                    router.push(
+                      extension.author.github_handle
+                        ? `https://github.com/${extension.author.github_handle}`
+                        : extension.author.website ??
+                        `https://raycast.com/${extension.author.username}`
+                    ),
+
                   icon: (
                     <div className="overflow-hidden relative w-4 h-4 rounded-full">
                       <Image
