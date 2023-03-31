@@ -1,4 +1,5 @@
 import "./globals.css";
+import Provider from "./provider";
 import "./raycast.scss";
 
 import { Inter } from "next/font/google";
@@ -32,7 +33,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Provider>{children}</Provider>
+      </body>
     </html>
   );
 }

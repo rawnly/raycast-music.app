@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { Command } from "cmdk";
 import { ArrowLeft } from "lucide-react";
 import { atom, useAtom } from "jotai";
+import { useHotkeys } from "react-hotkeys-hook";
 
 type Item =
   | {
@@ -29,13 +30,19 @@ interface Props {
 export const searchAtom = atom<string>("");
 
 export default function RaycastCMDK(props: Props) {
+  const id = useId();
   const { resolvedTheme: theme } = useTheme();
   const [value, setValue] = React.useState("install");
   const [search, setSearch] = useAtom(searchAtom);
-
-  const id = useId();
-
   const inputRef = React.useRef<HTMLInputElement | null>(null);
+
+  useHotkeys(
+    ["cmd+k", "ctrl+k", "meta+k"],
+    () => {
+      inputRef.current?.focus();
+    },
+    [inputRef]
+  );
 
   const onKeyDown = React.useCallback(
     function onKeyDown(e: any) {

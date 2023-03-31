@@ -11,9 +11,13 @@ import {
   Download as InstallIcon,
   GitMerge as ChangelogIcon,
   Users as ContributorsIcon,
+  Sun,
+  Moon,
+  Monitor,
 } from "lucide-react";
 import { useAtom, useSetAtom } from "jotai";
 import MenuFooter from "./MenuFooter";
+import { useTheme } from "next-themes";
 
 type Page = "main" | "credits" | "changelog";
 
@@ -26,6 +30,7 @@ export default function RaycastMenu({ extension }: Props) {
   const [page, setPage] = useState<Page>("main");
   const [search, setSearch] = useAtom(searchAtom);
   const [lastSearch, setLastSearch] = useState(() => search);
+  const { setTheme, theme, resolvedTheme } = useTheme();
 
   function goTo(p: Page) {
     setPage(p);
@@ -87,6 +92,21 @@ export default function RaycastMenu({ extension }: Props) {
                     title: "Changelog",
                     icon: <ChangelogIcon className="!w-4 !h-4 opacity-75" />,
                     onSelect: () => goTo("changelog"),
+                  },
+                  {
+                    title: "Toggle Theme",
+                    onSelect: () =>
+                      setTheme(resolvedTheme === "dark" ? "light" : "dark"),
+                    icon: match(theme)
+                      .with("dark", () => (
+                        <Sun className="!w-4 !h-4 opacity-75" />
+                      ))
+                      .with("system", () => (
+                        <Monitor className="!w-4 !h-4 opacity-75" />
+                      ))
+                      .otherwise(() => (
+                        <Moon className="!w-4 !h-4 opacity-75" />
+                      )),
                   },
                 ],
               },

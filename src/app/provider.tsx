@@ -4,7 +4,11 @@ import { ThemeProvider } from "next-themes";
 
 export default function Provider({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" enableSystem>
+    <ThemeProvider
+      attribute="class"
+      enableSystem
+      storageKey={"raycast-music-theme"}
+    >
       {children}
     </ThemeProvider>
   );
