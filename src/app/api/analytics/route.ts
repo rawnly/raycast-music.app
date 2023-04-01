@@ -1,17 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import * as tinybird from "@/lib/tinybird";
+import AxiomClient from "@axiomhq/axiom-node";
 import { env } from "@/lib/env";
 
 const payloadSchema = z.object({
   command: z.string(),
-  parameters: z.record(z.string(), z.string()),
+  timestamp: z.string(),
+  parameters: z.object({
+    raycastVersion: z.string(),
+    success: z.boolean(),
+    mode: z.string(),
+  }),
 });
 
 export async function POST(request: NextRequest) {
-  const payload = payloadSchema.safeParse(request.body);
+  const body = await request.json();
+  const payload = payloadSchema.safeParse(body);
 
   if (!payload.success) {
+    console.warn("Invalid payload", body, payload.error);
+
     return NextResponse.json(
       {
         error: "Bad Request",
@@ -23,13 +31,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const response = await tinybird.ingest(payload.data, env.TINYBIRD_DATASOURCE);
+  const axiom = new AxiomClient({
+    token: env.AXIOM_TOKEN,
+    orgId: env.AXIOM_ORG_ID,
+  });
 
-  if (!response.success) {
-    console.error(response.error);
-  }
+  const res = await axiom.ingestEvents(env.AXIOM_DATASOURCE, [payload.data]);
 
   return NextResponse.json({
-    ok: response.success,
+    failed: res.failed,
+    ingested: res.ingested,
   });
 }
