@@ -1,29 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import AxiomClient from "@axiomhq/axiom-node";
+import { axiom } from "@/lib/axiom";
 import { env } from "@/lib/env";
+import { AnalyticsEvent } from "@/lib/models";
+import { NextRequest, NextResponse } from "next/server";
 
-const payloadSchema = z.object({
-  command: z.string(),
-  timestamp: z.string(),
-  parameters: z.object({
-    raycastVersion: z.string(),
-    success: z.boolean(),
-    mode: z.string(),
-  }),
-});
+export const runtime = "experimental-edge";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const payload = payloadSchema.safeParse(body);
+  const body = (await request.json()) as Promise<unknown>;
+  const event = AnalyticsEvent.safeParse(body);
 
-  if (!payload.success) {
-    console.warn("Invalid payload", body, payload.error);
-
+  if (!event.success) {
     return NextResponse.json(
       {
-        error: "Bad Request",
-        message: "Invalid payload",
+        title: "Bad Request",
+        message: "Invalid request body",
       },
       {
         status: 400,
@@ -31,15 +21,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const axiom = new AxiomClient({
-    token: env.AXIOM_TOKEN,
-    orgId: env.AXIOM_ORG_ID,
-  });
-
-  const res = await axiom.ingestEvents(env.AXIOM_DATASOURCE, [payload.data]);
+  const response = await axiom.ingestEvents(
+    env.AXIOM_ANALYTICS_DATASOURCE,
+    [event.data],
+    {
+      timestampField: "timestamp",
+    }
+  );
 
   return NextResponse.json({
-    failed: res.failed,
-    ingested: res.ingested,
+    failed: response.failed,
+    ingested: response.ingested,
   });
 }

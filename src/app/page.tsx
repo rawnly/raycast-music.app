@@ -1,9 +1,6 @@
 import { getExtension } from "@/lib/raycast";
-import RaycastMenu from "./RaycastMenu";
+import RaycastWindow from "./components/raycast-window/window";
 import Hero from "@/components/Hero";
-import { motion } from "framer-motion";
-import MagicNumber from "@/components/MagicNumber";
-import MenuFooter from "./MenuFooter";
 
 export default async function Page() {
   const extension = await getExtension("fedevitaledev", "music");
@@ -22,12 +19,12 @@ export default async function Page() {
           <div className="flex flex-col col-span-2 gap-8 justify-center items-center lg:col-span-1 lg:items-end md:mt-[40%] lg:mt-0">
             <Hero />
             <div className="flex justify-center items-center w-full lg:hidden">
-              <RaycastMenu extension={extension} />
+              <RaycastWindow extension={extension} />
             </div>
           </div>
           <div className="hidden relative col-span-1 justify-center items-center pl-8 lg:flex">
             <div className="my-auto w-full">
-              <RaycastMenu extension={extension} />
+              <RaycastWindow extension={extension} />
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ const envSchema = z.object({
   AUTH_KEY: z.string(),
   AXIOM_TOKEN: z.string(),
   AXIOM_DATASOURCE: z.string(),
+  AXIOM_ANALYTICS_DATASOURCE: z.string(),
   AXIOM_ORG_ID: z.string(),
 });
 
@@ -16,4 +17,5 @@ export const env = envSchema.parse({
   AXIOM_TOKEN: process.env.AXIOM_TOKEN,
   AXIOM_DATASOURCE: process.env.AXIOM_DATASOURCE,
   AXIOM_ORG_ID: process.env.AXIOM_ORG_ID,
+  AXIOM_ANALYTICS_DATASOURCE: process.env.AXIOM_ANALYTICS_DATASOURCE,
 });

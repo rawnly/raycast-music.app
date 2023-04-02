@@ -1,8 +1,8 @@
 import "./globals.css";
 import Provider from "./provider";
 import "./raycast.scss";
-
-import { Inter } from "next/font/google";
+import { getVisitorFingerprint } from "@/lib/analytics.server";
+import PageViews from "@/components/Tracker";
 
 export const metadata = {
   title: "Raycast Music",
@@ -33,10 +33,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const fingerprint = getVisitorFingerprint();
+
   return (
     <html lang="en">
       <body>
-        <Provider>{children}</Provider>
+        <Provider>
+          {children}
+          <PageViews visitorId={fingerprint} />
+        </Provider>
       </body>
     </html>
   );

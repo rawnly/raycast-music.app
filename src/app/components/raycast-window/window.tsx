@@ -1,12 +1,13 @@
 "use client";
 
 import RaycastCMDK, { searchAtom } from "@/components/raycast";
-import { Extension } from "@/lib/raycast";
+import { Contributor, Extension } from "@/lib/raycast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import React, { useCallback, useState } from "react";
 import { match } from "ts-pattern";
+import { track } from "@/lib/analytics";
 import {
   Download as InstallIcon,
   GitMerge as ChangelogIcon,
@@ -15,8 +16,8 @@ import {
   Moon,
   Monitor,
 } from "lucide-react";
-import { useAtom, useSetAtom } from "jotai";
-import MenuFooter from "./MenuFooter";
+import { useAtom } from "jotai";
+import MenuFooter from "./footer";
 import { useTheme } from "next-themes";
 
 type Page = "main" | "credits" | "changelog";
@@ -25,7 +26,13 @@ interface Props {
   extension: Extension;
 }
 
-export default function RaycastMenu({ extension }: Props) {
+function getContributorUrl({ github_handle, website, username }: Contributor) {
+  return github_handle
+    ? `https://github.com/${github_handle}`
+    : website ?? `https://raycast.com/${username}`;
+}
+
+export default function RaycastWindow({ extension }: Props) {
   const router = useRouter();
   const [page, setPage] = useState<Page>("main");
   const [search, setSearch] = useAtom(searchAtom);
@@ -37,11 +44,21 @@ export default function RaycastMenu({ extension }: Props) {
 
     setLastSearch(search);
     setSearch("");
+
+    track("raycast.command", {
+      command: match(p)
+        .with("main", () => "back")
+        .otherwise(() => p),
+    });
   }
 
   const commands = extension.commands.map((cmd) => ({
     kind: "Command",
     title: cmd.title,
+    onSelect: () =>
+      track("raycast.command", {
+        command: cmd.title,
+      }),
     icon: (
       <div className="relative w-4 h-4">
         <Image
@@ -61,9 +78,6 @@ export default function RaycastMenu({ extension }: Props) {
 
   return (
     <div className="space-y-4 w-full max-w-[640px]">
-      {/* <div className="text-center lg:hidden"> */}
-      {/*   <MenuFooter extension={extension} /> */}
-      {/* </div> */}
       <motion.div
         initial={{ opacity: 0, translateY: -15 }}
         animate={{ opacity: 1, translateY: 0 }}
@@ -82,7 +96,11 @@ export default function RaycastMenu({ extension }: Props) {
                     title: "Install Extension",
                     value: "install",
                     icon: <InstallIcon className="!w-4 !h-4 opacity-75" />,
-                    onSelect() {
+                    async onSelect() {
+                      await track("raycast.install", {
+                        origin: "command",
+                      });
+
                       router.push("raycast://extensions/fedevitaledev/music");
                     },
                   },
@@ -135,14 +153,12 @@ export default function RaycastMenu({ extension }: Props) {
                   {
                     kind: "Author",
                     title: extension.author.name,
-                    onSelect: () =>
-                      router.push(
-                        extension.author.github_handle
-                          ? `https://github.com/${extension.author.github_handle}`
-                          : extension.author.website ??
-                          `https://raycast.com/${extension.author.username}`
-                      ),
-
+                    onSelect: async () => {
+                      await track("raycast.command", {
+                        command: "author",
+                      });
+                      router.push(getContributorUrl(extension.author));
+                    },
                     icon: (
                       <div className="overflow-hidden relative w-4 h-4 rounded-full">
                         <Image
@@ -161,13 +177,14 @@ export default function RaycastMenu({ extension }: Props) {
                   ...extension.contributors.map((contrib) => ({
                     kind: "Contributor",
                     title: contrib.name,
-                    onSelect: () =>
-                      router.push(
-                        contrib.github_handle
-                          ? `https://github.com/${contrib.github_handle}`
-                          : contrib.website ??
-                          `https://raycast.com/${contrib.username}`
-                      ),
+                    onSelect: async () => {
+                      await track("raycast.command", {
+                        command: "contributor",
+                        username: contrib.username,
+                      });
+
+                      router.push(getContributorUrl(contrib));
+                    },
                     icon: (
                       <div className="overflow-hidden relative w-4 h-4 rounded-full">
                         <Image src={contrib.avatar} alt={contrib.name} fill />
