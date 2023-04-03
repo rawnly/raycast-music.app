@@ -97,11 +97,15 @@ export default function RaycastWindow({ extension }: Props) {
                     value: "install",
                     icon: <InstallIcon className="!w-4 !h-4 opacity-75" />,
                     async onSelect() {
-                      await track("raycast.install", {
-                        origin: "command",
-                      });
-
-                      router.push("/install");
+                      try {
+                        await track("raycast.install", {
+                          origin: "command",
+                        });
+                      } catch (error) {
+                        console.error(error);
+                      } finally {
+                        router.push("/install");
+                      }
                     },
                   },
                   {
