@@ -101,7 +101,7 @@ export default function RaycastWindow({ extension }: Props) {
                         origin: "command",
                       });
 
-                      router.push("raycast://extensions/fedevitaledev/music");
+                      router.push("/install");
                     },
                   },
                   {

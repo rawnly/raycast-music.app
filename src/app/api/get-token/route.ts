@@ -13,9 +13,10 @@ export async function GET() {
       origin: [
         "https://raycast-music.app",
         "https://raycast-music.vercel.app",
-        "https://raycast-music.fedevitale.dev",
-        "http://localhost:3000",
-      ],
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : undefined,
+      ].filter((s) => !!s),
     })
       .setProtectedHeader({ alg, kid: env.AUTH_KEY_ID })
       .setIssuedAt()
@@ -35,4 +36,4 @@ export async function GET() {
   }
 }
 
-export const runtime = "edge";
+export const runtime = "experimental-edge";

@@ -10,7 +10,7 @@ export async function track(
     referrer: document.referrer,
   }
 ) {
-  return fetch("./api/analytics", {
+  return fetch("/api/analytics", {
     method: "POST",
     body: JSON.stringify({
       action,

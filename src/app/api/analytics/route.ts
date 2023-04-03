@@ -3,8 +3,6 @@ import { env } from "@/lib/env";
 import { AnalyticsEvent } from "@/lib/models";
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "experimental-edge";
-
 export async function POST(request: NextRequest) {
   const body = (await request.json()) as Promise<unknown>;
   const event = AnalyticsEvent.safeParse(body);
