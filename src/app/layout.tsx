@@ -3,6 +3,7 @@ import Provider from "./provider";
 import "./raycast.scss";
 import { getVisitorFingerprint } from "@/lib/analytics.server";
 import PageViews from "@/components/Tracker";
+import { Analytics } from "@vercel/analytics";
 
 export const metadata = {
   title: "Raycast Music",
@@ -42,6 +43,8 @@ export default function RootLayout({
           {children}
           <PageViews visitorId={fingerprint} />
         </Provider>
+
+        <Analytics />
       </body>
     </html>
   );
