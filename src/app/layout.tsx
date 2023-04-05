@@ -38,7 +38,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      <body className="max-md:overflow-hidden">
         <Provider>
           {children}
           <PageViews visitorId={fingerprint} />
