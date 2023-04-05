@@ -67,7 +67,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col gap-4 justify-center items-center p-8 w-screen min-h-screen">
+    <div className="flex flex-col gap-8 justify-center items-center p-8 w-screen min-h-screen">
       <h1 className="text-5xl font-bold text-center">
         <Balancer>
           Authenticate <br />

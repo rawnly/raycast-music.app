@@ -81,7 +81,7 @@ export default function RaycastWindow({ extension }: Props) {
       <motion.div
         initial={{ opacity: 0, translateY: -15 }}
         animate={{ opacity: 1, translateY: 0 }}
-        transition={{ duration: 0.2, delay: 0 }}
+        transition={{ duration: 1 }}
         className="w-full"
       >
         <RaycastCMDK

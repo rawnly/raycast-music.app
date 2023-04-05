@@ -24,7 +24,7 @@ const variants = {
 };
 
 const transition: Transition = {
-  duration: 0.25,
+  duration: 1,
   bounce: 0.1,
   type: "tween",
 };

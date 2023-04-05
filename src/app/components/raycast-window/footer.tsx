@@ -15,7 +15,7 @@ export default function MenuFooter({ extension }: Props) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.2 }}
-      className="text-sm text-gray-500 dark:text-[#3d3d3d]"
+      className="text-sm text-gray-500 dark:text-[#ccc]/50"
     >
       Join{" "}
       <MagicNumber
