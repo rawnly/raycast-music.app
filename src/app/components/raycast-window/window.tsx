@@ -15,6 +15,7 @@ import {
   Sun,
   Moon,
   Monitor,
+  Github,
 } from "lucide-react";
 import { useAtom } from "jotai";
 import MenuFooter from "./footer";
@@ -133,6 +134,11 @@ export default function RaycastWindow({ extension }: Props) {
                         <Moon className="!w-4 !h-4 opacity-75" />
                       )),
                   },
+                  {
+                    title: "Source",
+                    icon: <Github className="!w-4 !h-4 opacity-75" />,
+                    onSelect: () => router.push('https://github.com/raycast/extensions/tree/main/extensions/music')
+                  }
                 ],
               },
               {
