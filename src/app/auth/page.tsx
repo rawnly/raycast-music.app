@@ -30,6 +30,7 @@ async function fetcher<T>(url: string) {
 }
 
 export default function Page() {
+  const [initialized, setInitilaized] = useState(false)
   const [token, setToken] = useState<string | null>(null);
 
   const { data, isLoading } = useSWR<{ token: string; expires: number }>(
@@ -37,10 +38,16 @@ export default function Page() {
     fetcher
   );
 
+  const mkit = typeof MusicKit;
+
   const instance = useMemo(() => {
-    if (typeof MusicKit === "undefined") return;
+    if (mkit === 'undefined' || !initialized) {
+      console.error("MusicKit is not defined");
+      return;
+    };
+
     return MusicKit.getInstance();
-  }, []);
+  }, [initialized, mkit]);
 
   useEffect(() => {
     if (!data || typeof MusicKit === 'undefined') return;
@@ -59,10 +66,15 @@ export default function Page() {
         build: "0.0.1",
       },
     });
+
+    setInitilaized(true)
   }, [data]);
 
   async function authorize() {
-    if (!instance) return;
+    if (!instance) {
+      console.error("MusicKit instance is not initialized");
+      return
+    };
 
     try {
       const token = await instance.authorize();
