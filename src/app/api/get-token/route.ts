@@ -11,6 +11,7 @@ export async function GET() {
 
     const jwt = new jose.SignJWT({
       origin: [
+        "https://preview.raycast-music.app",
         "https://raycast-music.app",
         "https://raycast-music.vercel.app",
         process.env.NODE_ENV === "development"
