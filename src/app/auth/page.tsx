@@ -43,8 +43,15 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || typeof MusicKit === 'undefined') return;
 
+    if (typeof MusicKit.configure !== 'function') {
+      console.warn('MusicKit.configure is not a function', MusicKit)
+      alert('Something went wrong while initializing MusicKit. Please reload.')
+      return
+    }
+
+    console.log('MusicKit has been initialized')
     MusicKit.configure({
       developerToken: data?.token,
       app: {
@@ -95,7 +102,7 @@ export default function Page() {
         </Button>
       )}
 
-      <Script src="https://js-cdn.music.apple.com/musickit/v1/musickit.js" />
+      <Script async onError={(e) => console.error('Could not load MuiscKit', e)} onLoad={() => console.log('MusicKit Script Loaded')} src="https://js-cdn.music.apple.com/musickit/v1/musickit.js" />
     </div>
   );
 }
