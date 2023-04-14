@@ -76,13 +76,12 @@ export default function Page() {
       return
     };
 
-    try {
-      const token = await instance.authorize();
-      setToken(token);
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
-    }
+    instance.authorize().then(token => {
+      console.log('MusicKit has been authorized', token)
+      setToken(token)
+    }).catch(
+      console.error
+    )
   }
 
   return (
