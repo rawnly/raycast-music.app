@@ -30,6 +30,7 @@ async function fetcher<T>(url: string) {
 }
 
 export default function Page() {
+  const [initialized, setInitilaized] = useState(false)
   const [token, setToken] = useState<string | null>(null);
 
   const { data, isLoading } = useSWR<{ token: string; expires: number }>(
@@ -37,14 +38,27 @@ export default function Page() {
     fetcher
   );
 
+  const mkit = typeof MusicKit;
+
   const instance = useMemo(() => {
-    if (typeof MusicKit === "undefined") return;
+    if (mkit === 'undefined' || !initialized) {
+      console.error("MusicKit is not defined");
+      return;
+    };
+
     return MusicKit.getInstance();
-  }, []);
+  }, [initialized, mkit]);
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || typeof MusicKit === 'undefined') return;
 
+    if (typeof MusicKit.configure !== 'function') {
+      console.warn('MusicKit.configure is not a function', MusicKit)
+      alert('Something went wrong while initializing MusicKit. Please reload.')
+      return
+    }
+
+    console.log('MusicKit has been initialized')
     MusicKit.configure({
       developerToken: data?.token,
       app: {
@@ -52,18 +66,22 @@ export default function Page() {
         build: "0.0.1",
       },
     });
+
+    setInitilaized(true)
   }, [data]);
 
   async function authorize() {
-    if (!instance) return;
+    if (!instance) {
+      console.error("MusicKit instance is not initialized");
+      return
+    };
 
-    try {
-      const token = await instance.authorize();
-      setToken(token);
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
-    }
+    instance.authorize().then(token => {
+      console.log('MusicKit has been authorized', token)
+      setToken(token)
+    }).catch(
+      console.error
+    )
   }
 
   return (
@@ -95,7 +113,7 @@ export default function Page() {
         </Button>
       )}
 
-      <Script src="https://js-cdn.music.apple.com/musickit/v1/musickit.js" />
+      <Script async onError={(e) => console.error('Could not load MuiscKit', e)} onLoad={() => console.log('MusicKit Script Loaded')} src="https://js-cdn.music.apple.com/musickit/v1/musickit.js" />
     </div>
   );
 }
