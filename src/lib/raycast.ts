@@ -24,11 +24,11 @@ const contributorSchema = z.object({
   name: z.string(),
   handle: z.string(),
   bio: z.string(),
-  twitter_handle: z.string().optional(),
+  twitter_handle: z.string().nullable().optional(),
   initials: z.string(),
   location: z.string(),
   github_handle: z.string(),
-  website: z.string().optional(),
+  website: z.string().nullable(),
   username: z.string(),
   avatar: z.string(),
 });
