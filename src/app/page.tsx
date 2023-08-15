@@ -6,7 +6,7 @@ export default async function Page() {
   const extension = await getExtension("fedevitaledev", "music");
 
   if (!extension) {
-    throw new Error("something went wrong");
+    throw new Error("Could not fetch extension data");
   }
 
   return (

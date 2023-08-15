@@ -1,8 +1,6 @@
 import "./globals.css";
 import Provider from "./provider";
 import "./raycast.scss";
-import { getVisitorFingerprint } from "@/lib/analytics.server";
-import PageViews from "@/components/Tracker";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
@@ -34,16 +32,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const fingerprint = getVisitorFingerprint();
-
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="max-md:overflow-hidden">
-        <Provider>
-          {children}
-          <PageViews visitorId={fingerprint} />
-        </Provider>
-
+        <Provider>{children}</Provider>
         <Analytics />
       </body>
     </html>

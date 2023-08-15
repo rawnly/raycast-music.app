@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import React, { useCallback, useState } from "react";
 import { match } from "ts-pattern";
-import { track } from "@/lib/analytics";
 import {
   Download as InstallIcon,
   GitMerge as ChangelogIcon,
@@ -16,6 +15,7 @@ import {
   Moon,
   Monitor,
   Github,
+  ShoppingBag as StoreIcon,
 } from "lucide-react";
 import { useAtom } from "jotai";
 import MenuFooter from "./footer";
@@ -45,21 +45,11 @@ export default function RaycastWindow({ extension }: Props) {
 
     setLastSearch(search);
     setSearch("");
-
-    track("raycast.command", {
-      command: match(p)
-        .with("main", () => "back")
-        .otherwise(() => p),
-    });
   }
 
   const commands = extension.commands.map((cmd) => ({
     kind: "Command",
     title: cmd.title,
-    onSelect: () =>
-      track("raycast.command", {
-        command: cmd.title,
-      }),
     icon: (
       <div className="relative w-4 h-4">
         <Image
@@ -97,17 +87,7 @@ export default function RaycastWindow({ extension }: Props) {
                     title: "Install Extension",
                     value: "install",
                     icon: <InstallIcon className="!w-4 !h-4 opacity-75" />,
-                    async onSelect() {
-                      try {
-                        await track("raycast.install", {
-                          origin: "command",
-                        });
-                      } catch (error) {
-                        console.error(error);
-                      } finally {
-                        router.push("/install");
-                      }
-                    },
+                    onSelect: () => router.push(`/install`),
                   },
                   {
                     title: "Credits",
@@ -118,6 +98,12 @@ export default function RaycastWindow({ extension }: Props) {
                     title: "Changelog",
                     icon: <ChangelogIcon className="!w-4 !h-4 opacity-75" />,
                     onSelect: () => goTo("changelog"),
+                  },
+                  {
+                    title: "View on the store",
+                    value: "store",
+                    icon: <StoreIcon className="!w-4 !h-4 opacity-75" />,
+                    onSelect: () => router.push(extension.store_url),
                   },
                   {
                     title: "Toggle Theme",
@@ -137,8 +123,11 @@ export default function RaycastWindow({ extension }: Props) {
                   {
                     title: "Source",
                     icon: <Github className="!w-4 !h-4 opacity-75" />,
-                    onSelect: () => router.push('https://github.com/raycast/extensions/tree/main/extensions/music')
-                  }
+                    onSelect: () =>
+                      router.push(
+                        "https://github.com/raycast/extensions/tree/main/extensions/music",
+                      ),
+                  },
                 ],
               },
               {
@@ -164,9 +153,6 @@ export default function RaycastWindow({ extension }: Props) {
                     kind: "Author",
                     title: extension.author.name,
                     onSelect: async () => {
-                      await track("raycast.command", {
-                        command: "author",
-                      });
                       router.push(getContributorUrl(extension.author));
                     },
                     icon: (
@@ -188,11 +174,6 @@ export default function RaycastWindow({ extension }: Props) {
                     kind: "Contributor",
                     title: contrib.name,
                     onSelect: async () => {
-                      await track("raycast.command", {
-                        command: "contributor",
-                        username: contrib.username,
-                      });
-
                       router.push(getContributorUrl(contrib));
                     },
                     icon: (

@@ -17,12 +17,12 @@ export default function MenuFooter({ extension }: Props) {
       transition={{ delay: 0.2 }}
       className="text-sm text-gray-500 dark:text-[#ccc]/50"
     >
-      Join{" "}
+      Join over{" "}
       <MagicNumber
         accent={"#E7515D"}
         value={
           parseInt(
-            formatNumber(extension.download_count, 0).replace(/\D/g, "")
+            formatNumber(extension.download_count, 0).replace(/\D/g, ""),
           ) ?? extension.download_count
         }
       />

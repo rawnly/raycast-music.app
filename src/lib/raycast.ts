@@ -54,7 +54,7 @@ const extensionSchema = z.object({
         title: z.string(),
         date: z.string(),
         markdown: z.string(),
-      })
+      }),
     ),
   }),
 });
@@ -63,7 +63,11 @@ export type Extension = z.infer<typeof extensionSchema>;
 
 export const getExtension = async (author: string, extensionName: string) => {
   const url = `https://www.raycast.com/frontend_api/users/${author}/extensions/${extensionName}`;
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    next: {
+      revalidate: 0,
+    },
+  });
 
   if (response.status !== 200) {
     console.log(response);

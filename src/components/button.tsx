@@ -1,24 +1,29 @@
 import clsx from "clsx";
-import React, { FC } from "react";
+import React from "react";
+import { Slot } from "@radix-ui/react-slot";
 
-interface IButtonProps extends React.ComponentPropsWithoutRef<"button"> { }
+interface IButtonProps extends React.ComponentPropsWithoutRef<"button"> {
+  asChild?: boolean;
+}
 
 const Button = React.forwardRef<HTMLButtonElement, IButtonProps>(
-  ({ children, className, ...props }, ref) => {
+  ({ children, className, asChild = false, ...props }, ref) => {
+    const Component = asChild ? Slot : "button";
+
     return (
-      <button
+      <Component
         ref={ref}
         {...props}
         className={clsx(
           "transition-all duration-150 hover:shadow",
           "px-4 py-2 bg-brand rounded-md text-white font-medium shadow-md shadow-brand/80",
-          className
+          className,
         )}
       >
         {children}
-      </button>
+      </Component>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";
