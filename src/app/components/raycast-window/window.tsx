@@ -158,7 +158,10 @@ export default function RaycastWindow({ extension }: Props) {
                     icon: (
                       <div className="overflow-hidden relative w-4 h-4 rounded-full">
                         <Image
-                          src={extension.author.avatar}
+                          src={
+                            extension.author.avatar ??
+                            `https://avatars.githubusercontent.com/${extension.author.username}`
+                          }
                           alt={extension.author.name}
                           fill
                         />
@@ -178,7 +181,14 @@ export default function RaycastWindow({ extension }: Props) {
                     },
                     icon: (
                       <div className="overflow-hidden relative w-4 h-4 rounded-full">
-                        <Image src={contrib.avatar} alt={contrib.name} fill />
+                        <Image
+                          src={
+                            contrib.avatar ??
+                            `https://avatars.githubusercontent.com/${extension.author.username}`
+                          }
+                          alt={contrib.name}
+                          fill
+                        />
                       </div>
                     ),
                   })),

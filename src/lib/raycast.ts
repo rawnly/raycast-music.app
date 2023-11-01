@@ -23,14 +23,14 @@ export type Command = z.infer<typeof commandSchema>;
 const contributorSchema = z.object({
   name: z.string(),
   handle: z.string(),
-  bio: z.string(),
+  bio: z.string().nullable(),
   twitter_handle: z.string().nullable().optional(),
   initials: z.string(),
-  location: z.string(),
-  github_handle: z.string(),
+  location: z.string().nullable(),
+  github_handle: z.string().nullable(),
   website: z.string().nullable(),
   username: z.string(),
-  avatar: z.string(),
+  avatar: z.string().nullable(),
 });
 
 export type Contributor = z.infer<typeof contributorSchema>;
@@ -78,7 +78,7 @@ export const getExtension = async (author: string, extensionName: string) => {
   const ext = extensionSchema.safeParse(data);
 
   if (ext.success) return ext.data;
-  console.error(ext.error);
+  console.error(ext.error.issues);
 
   return null;
 };

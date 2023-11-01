@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["files.raycast.com", "raycast.com"],
-  },
-  experimental: {
-    appDir: true,
+    domains: [
+      "files.raycast.com",
+      "via.placeholder.com",
+      "avatars.githubusercontent.com",
+      "raycast.com",
+    ],
   },
 };
 
