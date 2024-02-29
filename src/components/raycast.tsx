@@ -100,7 +100,7 @@ export default function RaycastCMDK(props: Props) {
         <hr cmdk-raycast-loader="" />
         <Command.List>
           <Command.Empty>No results found.</Command.Empty>
-          {props.items.map((item, idx) =>
+          {props.items.map((item) =>
             "label" in item ? (
               <Command.Group key={item.label} heading={item.label}>
                 {item.items.map((item, idx) => (

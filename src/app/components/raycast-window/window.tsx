@@ -1,5 +1,6 @@
 "use client";
 
+import posthog from "posthog-js";
 import RaycastCMDK, { searchAtom } from "@/components/raycast";
 import { Contributor, Extension } from "@/lib/raycast";
 import Image from "next/image";
@@ -40,7 +41,18 @@ export default function RaycastWindow({ extension }: Props) {
   const [lastSearch, setLastSearch] = useState(() => search);
   const { setTheme, theme, resolvedTheme } = useTheme();
 
+  function track<T extends function>(event: string, callback: T) {
+    return function (...args: Parameters<T>) {
+      posthog.capture(event, { extension: extension.name });
+      return callback.apply(null, args);
+    };
+  }
+
   function goTo(p: Page) {
+    posthog.capture('go_to', {
+      page: p,
+    })
+
     setPage(p);
 
     setLastSearch(search);
@@ -87,7 +99,7 @@ export default function RaycastWindow({ extension }: Props) {
                     title: "Install Extension",
                     value: "install",
                     icon: <InstallIcon className="!w-4 !h-4 opacity-75" />,
-                    onSelect: () => router.push(`/install`),
+                    onSelect: track('install', () => router.push(`/install`)),
                   },
                   {
                     title: "Credits",
@@ -103,12 +115,12 @@ export default function RaycastWindow({ extension }: Props) {
                     title: "View on the store",
                     value: "store",
                     icon: <StoreIcon className="!w-4 !h-4 opacity-75" />,
-                    onSelect: () => router.push(extension.store_url),
+                    onSelect: track('store_url',() => router.push(extension.store_url)),
                   },
                   {
                     title: "Toggle Theme",
-                    onSelect: () =>
-                      setTheme(resolvedTheme === "dark" ? "light" : "dark"),
+                    onSelect: () => 
+                      track('theme_change', setTheme(resolvedTheme === "dark" ? "light" : "dark")),
                     icon: match(theme)
                       .with("dark", () => (
                         <Sun className="!w-4 !h-4 opacity-75" />
@@ -123,10 +135,10 @@ export default function RaycastWindow({ extension }: Props) {
                   {
                     title: "Source",
                     icon: <Github className="!w-4 !h-4 opacity-75" />,
-                    onSelect: () =>
+                    onSelect: track('github',() =>
                       router.push(
                         "https://github.com/raycast/extensions/tree/main/extensions/music",
-                      ),
+                      )),
                   },
                 ],
               },
@@ -152,7 +164,8 @@ export default function RaycastWindow({ extension }: Props) {
                   {
                     kind: "Author",
                     title: extension.author.name,
-                    onSelect: async () => {
+                    onSelect: () => {
+                      posthog.capture('author_click', extension.author);
                       router.push(getContributorUrl(extension.author));
                     },
                     icon: (
@@ -177,6 +190,7 @@ export default function RaycastWindow({ extension }: Props) {
                     kind: "Contributor",
                     title: contrib.name,
                     onSelect: async () => {
+                      posthog.capture('contributor_click', contrib);
                       router.push(getContributorUrl(contrib));
                     },
                     icon: (
