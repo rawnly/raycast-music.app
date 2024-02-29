@@ -41,7 +41,7 @@ export default function RaycastWindow({ extension }: Props) {
   const [lastSearch, setLastSearch] = useState(() => search);
   const { setTheme, theme, resolvedTheme } = useTheme();
 
-  function track<T extends function>(event: string, callback: T) {
+  function track<T extends (...args: any) => any>(event: string, callback: T) {
     return function (...args: Parameters<T>) {
       posthog.capture(event, { extension: extension.name });
       return callback.apply(null, args);
