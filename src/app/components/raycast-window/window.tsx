@@ -119,8 +119,8 @@ export default function RaycastWindow({ extension }: Props) {
                   },
                   {
                     title: "Toggle Theme",
-                    onSelect: () => 
-                      track('theme_change', setTheme(resolvedTheme === "dark" ? "light" : "dark")),
+                    onSelect: 
+                      track('theme_change', () => setTheme(resolvedTheme === "dark" ? "light" : "dark")),
                     icon: match(theme)
                       .with("dark", () => (
                         <Sun className="!w-4 !h-4 opacity-75" />
